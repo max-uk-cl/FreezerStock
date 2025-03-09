@@ -2,7 +2,8 @@ import sqlite3
 from flask import Flask
 from flask import request
 from flask import g
-DATABASE = "Stock.db"
+DATABASE = "/data/stock.db"
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:

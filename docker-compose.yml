@@ -1,0 +1,9 @@
+services:
+  freezer_stock:
+    user: 984:1001
+    container_name: freezer_stock
+    image: maxukcl/freezerstock
+    ports:
+      - 5001:5000
+    volumes:
+      - /opt/data/freezer_stock:/data
