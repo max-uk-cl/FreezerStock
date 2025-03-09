@@ -18,7 +18,7 @@ def insert_method(ean):
     "(EAN STRING,Stock INTEGER,PRIMARY KEY(EAN))")
     def insert(ean_code):
         try:
-            cursor.execute("INSERT INTO StockItems VALUES (?,1)",(ean_code))
+            cursor.execute("INSERT INTO StockItems VALUES (?,?)",(ean_code,1))
         except ValueError:
             cursor.execute("UPDATE StockItems SET Stock = Stock + 1 WHERE EAN = (?) ",(ean_code))
     insert(ean)
@@ -75,3 +75,4 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+    return exception
