@@ -11,7 +11,7 @@ def get_db():
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
     return db
-def insert_method(ean):
+def insert_method(ean_code):
     """Method to insert item where EAN is the product code"""
     cursor = get_db().cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS StockItems"
@@ -20,8 +20,8 @@ def insert_method(ean):
         try:
             cursor.execute("INSERT INTO StockItems VALUES (?,?)",(ean_code,1))
         except ValueError:
-            cursor.execute("UPDATE StockItems SET Stock = Stock + 1 WHERE EAN = (?) ",(ean_code))
-    insert(ean)
+            cursor.execute("UPDATE StockItems SET Stock = Stock + 1 WHERE EAN = (?) ",(ean_code,))
+    insert(ean_code)
     get_db().commit()
 def get_method():
     """Method for getting all the values in the table"""
@@ -33,18 +33,18 @@ def get_method():
             json_stock_value = json.dumps(stock_value)
             return json_stock_value
         except OSError:
-            return "Something went wrong"
+            return json.dumps("Something went wrong")
     return get_stock()
-def delete_method(ean):
+def delete_method(ean_code):
     """Method to reduce the stock of a product by 1"""
     cursor = get_db().cursor()
-    def delelete_item(ean_code):
-        cursor.execute("SELECT Stock FROM StockItems WHERE EAN = (?)",(ean_code))
+    def delete_item(ean_code):
+        cursor.execute("SELECT Stock FROM StockItems WHERE EAN = (?)",(ean_code,))
         stock_amount = cursor.fetchall()
         if stock_amount[0][0] > 0:
-            cursor.execute("UPDATE StockItems SET Stock = Stock - 1 WHERE EAN = (?)",(ean_code))
+            cursor.execute("UPDATE StockItems SET Stock = Stock - 1 WHERE EAN = (?)",(ean_code,))
 
-    delelete_item(ean)
+    delete_item(ean_code)
     get_db().commit()
 
 
