@@ -2,6 +2,7 @@ import sqlite3
 from flask import Flask
 from flask import request
 from flask import g
+import json
 DATABASE = "/data/stock.db"
 
 def get_db():
@@ -20,16 +21,17 @@ def insertMethod(EAN):
             cursor.execute("UPDATE StockItems SET Stock = Stock + 1 WHERE EAN = (?) ",(eanCode))
     insert(EAN)
     get_db().commit()
-def getMethod(EAN):
+def getMethod():
     cursor = get_db().cursor()
-    def getStock(eanCode):
+    def getStock():
         try:
-            cursor.execute("SELECT Stock FROM StockItems WHERE EAN = (?)",(eanCode))
-            stockValue = str(cursor.fetchall()[0][0])
-            return stockValue
+            cursor.execute("SELECT * FROM StockItems")
+            stockValue = cursor.fetchall()
+            jsonStockValue = json.dumps(stockValue)
+            return jsonStockValue
         except:
-            return "potato"
-    return getStock(EAN)
+            return "Something went wrong"
+    return getStock()
 def deleteMethod(EAN):
     cursor = get_db().cursor()
     def deleleteItem(eanCode):
@@ -54,9 +56,9 @@ def devInsert(id):
 def devDel(id):
     deleteMethod(id)
     return " "
-@app.get('/api/get/<id>')
-def devGet(id):
-    stock = getMethod(id)
+@app.get('/api/get')
+def devGet():
+    stock = getMethod()
     print(stock)
     return stock
 @app.teardown_appcontext
