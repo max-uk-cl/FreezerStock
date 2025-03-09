@@ -70,7 +70,7 @@ def dev_get():
     print(stock)
     return stock
 @app.teardown_appcontext
-def close_connection():
+def close_connection(exception):
     """Closes connection with database"""
     db = getattr(g, '_database', None)
     if db is not None:
