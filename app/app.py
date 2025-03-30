@@ -19,7 +19,7 @@ def insert_method(ean_code):
     def insert(ean_code):
         try:
             cursor.execute("INSERT INTO StockItems VALUES (?,?)",(ean_code,1))
-        except ValueError:
+        except:
             cursor.execute("UPDATE StockItems SET Stock = Stock + 1 WHERE EAN = (?) ",(ean_code,))
     insert(ean_code)
     get_db().commit()
